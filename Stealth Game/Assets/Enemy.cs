@@ -47,7 +47,8 @@ public class Enemy : MonoBehaviour
     	Vector3 toPlayer = this.player.transform.position - new Vector3(this.transform.position.x, this.player.transform.position.y, this.transform.position.z);
     	//Figure out the angle, to see if it's in the vision cone
         //Debug.Log(Vector3.Angle(toPlayer, this.transform.forward));
-    	if(Vector3.Angle(toPlayer, this.transform.forward) < 40){
+        //Also check distance
+    	if(Vector3.Angle(toPlayer, this.transform.forward) < 40 && toPlayer.magnitude < 10){
     		Debug.Log("Potential spot");
     		//We're going to try raycasting now to the left, middle, and right bits of the player
     		//If any of them don't hit a wall, we found it
