@@ -5,14 +5,31 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
 	GameObject player;
+	GameObject playerObject;
+	GameObject enemyObject;
 	public string moveDirection = "right";
     // Start is called before the first frame update
+	bool resetting = false;
+	int timer = 0;
     void Start()
     {
         this.player = GameObject.Find("PlayerBody");
+		this.playerObject = GameObject.Find("Player");
+		this.enemyObject = GameObject.Find("Enemy");
     }
 
     void Update(){
+
+		if (resetting) {
+			timer += 1;
+			if (timer >= 300) {
+				var pos = this.GetComponent<Transform>(); 
+        		pos.position = new Vector3(0.0f, 1.0f, 4.0f);
+				resetting = false;
+				timer = 0;
+			}
+			return;
+		}
 
 		var transform = this.GetComponent<Transform>(); 
         var position = transform.position;
@@ -71,11 +88,17 @@ public class Enemy : MonoBehaviour
     				break;
     			}
     		}
-    		if(hit)
+    		if(hit) {
     			Debug.Log("Spot");
-
+				playerObject.SendMessage("reset");
+				enemyObject.SendMessage("reset");
+			}
 
 
     	}
+    }
+
+	void reset() {
+		resetting = true;
     }
 }
