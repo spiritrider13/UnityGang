@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
 	GameObject player;
+	public string moveDirection = "right";
     // Start is called before the first frame update
     void Start()
     {
@@ -12,6 +13,35 @@ public class Enemy : MonoBehaviour
     }
 
     void Update(){
+
+		var transform = this.GetComponent<Transform>(); 
+        var position = transform.position;
+		var rotation = transform.rotation;
+
+		if (moveDirection == "right") {
+			if (position.x > -8) {
+				position.x -= 0.01f;
+				position.z += 0.01f;
+				rotation.y = 135.0f;
+			}
+			else {
+				moveDirection = "left";
+			}
+		}
+		else {
+			if (position.x < 0) {
+				position.x += 0.01f;
+				position.z -= 0.01f;
+				rotation.y = -135.0f;
+			}
+			else {
+				moveDirection = "right";
+			}
+		}
+
+		transform.position = position;
+		transform.rotation = rotation;
+		
     	//Need to check to see if the player is roughly in front
     	//We're doing it from the player's height
     	Vector3 toPlayer = this.player.transform.position - new Vector3(this.transform.position.x, this.player.transform.position.y, this.transform.position.z);
@@ -42,6 +72,9 @@ public class Enemy : MonoBehaviour
     		}
     		if(hit)
     			Debug.Log("Spot");
+
+
+
     	}
     }
 }
