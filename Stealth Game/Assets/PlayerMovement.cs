@@ -30,18 +30,18 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        var transform = this.GetComponent<Transform>(); 
-        var position = transform.position;
-        position.x += Input.GetAxis("Horizontal") * this.speed * Time.deltaTime;
-        position.z += Input.GetAxis("Vertical") * this.speed * Time.deltaTime;
-        transform.position = position;
-        //var delta = new Vector3(
-            //Input.GetAxis("Horizontal") * this.speed,
-            //0.0f,
-            //Input.GetAxis("Vertical") * this.speed
-        //);
+        //var transform = this.GetComponent<Transform>(); 
+        //var position = transform.position;
+        //position.x += Input.GetAxis("Horizontal") * this.speed * Time.deltaTime;
+        //position.z += Input.GetAxis("Vertical") * this.speed * Time.deltaTime;
+        //transform.position = position;
+        var delta = new Vector3(
+            Input.GetAxis("Horizontal") * this.speed,
+            0.0f,
+            Input.GetAxis("Vertical") * this.speed
+        );
 
-        //this.GetComponent<CharacterController>().SimpleMove(delta);
+        this.GetComponent<CharacterController>().SimpleMove(delta);
 
     }
 
