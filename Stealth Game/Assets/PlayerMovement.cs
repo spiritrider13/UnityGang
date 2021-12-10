@@ -29,12 +29,6 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-
-        //var transform = this.GetComponent<Transform>(); 
-        //var position = transform.position;
-        //position.x += Input.GetAxis("Horizontal") * this.speed * Time.deltaTime;
-        //position.z += Input.GetAxis("Vertical") * this.speed * Time.deltaTime;
-        //transform.position = position;
         var delta = new Vector3(
             Input.GetAxis("Horizontal") * this.speed,
             0.0f,

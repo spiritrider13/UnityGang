@@ -2,20 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Enemy : MonoBehaviour
 {
 	GameObject player;
 	GameObject playerObject;
 	GameObject enemyObject;
 	public string moveDirection = "right";
+    Vector3[] waypoints;
     // Start is called before the first frame update
 	bool resetting = false;
 	int timer = 0;
+    int currWaypoint;
     void Start()
     {
         this.player = GameObject.Find("PlayerBody");
 		this.playerObject = GameObject.Find("Player");
 		this.enemyObject = GameObject.Find("Enemy");
+        //Going to use a series of waypoints
+        //Need to figure out how to not hardcode this for multiple enemies
+        waypoints = new Vector3[]{new Vector3(0.0f, 1.0f, 4.0f), new Vector3(-8.0f, 1.0f, 4.0f), new Vector3(-6.0f, 1.0f, 4.0f),
+             new Vector3(-4.0f, 1.0f, 8.0f), new Vector3(-2.0f, 1.0f, 4.0f)};
+        currWaypoint = 0;
     }
 
     void Update(){
@@ -27,6 +35,7 @@ public class Enemy : MonoBehaviour
         		pos.position = new Vector3(0.0f, 1.0f, 4.0f);
 				resetting = false;
 				timer = 0;
+                currWaypoint = 0;
 			}
 			return;
 		}
@@ -35,29 +44,65 @@ public class Enemy : MonoBehaviour
         var position = transform.position;
 		var rotation = transform.rotation;
 
-		if (moveDirection == "right") {
-			if (position.x > -8) {
-				position.x -= 0.01f;
-				position.z += 0.01f;
-				rotation.y = 135.0f;
-			}
-			else {
-				moveDirection = "left";
-			}
-		}
-		else {
-			if (position.x < 0) {
-				position.x += 0.01f;
-				position.z -= 0.01f;
-				rotation.y = -135.0f;
-			}
-			else {
-				moveDirection = "right";
-			}
-		}
+        //Check to see if we're at a waypoint
+        if(this.transform.position == waypoints[currWaypoint]){
+            if(currWaypoint == waypoints.Length -1)
+                currWaypoint = 0;
+            else
+                currWaypoint++;
+        }
+        //Then go to the next waypoint
+        Vector3 toDest = waypoints[currWaypoint] - this.transform.position;
+        //Figure out if we're facing it
+        float angleTo = Vector3.SignedAngle(toDest.normalized, this.transform.forward, Vector3.up);
+        if(System.Math.Abs(angleTo) >=  0.1){
+            //Need to turn to it, but not overturn
+            //Standard is 120 degrees a second
+            //Check if we can move the full distance we want
+            if(System.Math.Abs(angleTo) > 120 * Time.deltaTime){
+                //If so, do it
+                this.transform.Rotate(new Vector3(0.0f, 120.0f * System.Math.Sign(angleTo) * Time.deltaTime * -1.0f, 0.0f));
+            }
+            //Otherwise, just rotate directly to it
+            else
+                this.transform.Rotate(new Vector3(0.0f, angleTo, 0.0f));
+        }
+        //Once we're done rotating, move
+        else{
+            //If we can get there immediately, do it
+            if(toDest.magnitude <= 10.0f * Time.deltaTime){
+                this.transform.position = waypoints[currWaypoint];
+            }
+            //Otherwise, move the best we can
 
-		transform.position = position;
-		transform.rotation = rotation;
+            else
+                this.transform.Translate(toDest.normalized * 10.0f * Time.deltaTime, Space.World);
+            Debug.Log(toDest.normalized * 10.0f * Time.deltaTime);
+            Debug.Log(this.transform.position);
+        }
+		//if (moveDirection == "right") {
+		//	if (position.x > -8) {
+		//		position.x -= 0.01f;
+		//		position.z += 0.01f;
+		//		rotation.y = 135.0f;
+		//	}
+		//	else {
+		//		moveDirection = "left";
+		//	}
+		//}
+		//else {
+		//	if (position.x < 0) {
+		//		position.x += 0.01f;
+		//		position.z -= 0.01f;
+		//		rotation.y = -135.0f;
+		//	}
+		//	else {
+		//		moveDirection = "right";
+		//	}
+		//}
+//
+		//transform.position = position;
+		//transform.rotation = rotation;
 		
     	//Need to check to see if the player is roughly in front
     	//We're doing it from the player's height
