@@ -9,7 +9,8 @@ public class Enemy : MonoBehaviour
 	GameObject playerObject;
 	GameObject enemyObject;
 	public string moveDirection = "right";
-    Vector3[] waypoints;
+    public int patrolRoute;
+    Vector3[][] waypoints;
     // Start is called before the first frame update
 	bool resetting = false;
 	int timer = 0;
@@ -21,7 +22,8 @@ public class Enemy : MonoBehaviour
 		this.enemyObject = GameObject.Find("Enemy");
         //Going to use a series of waypoints
         //Need to figure out how to not hardcode this for multiple enemies
-        waypoints = new Vector3[]{new Vector3(0.0f, 1.0f, 4.0f), new Vector3(-8.0f, 1.0f, 4.0f), new Vector3(-6.0f, 1.0f, 4.0f),
+        waypoints = new Vector3[1][];
+        waypoints[0] = new Vector3[5]{new Vector3(0.0f, 1.0f, 4.0f), new Vector3(-8.0f, 1.0f, 4.0f), new Vector3(-6.0f, 1.0f, 4.0f),
              new Vector3(-4.0f, 1.0f, 8.0f), new Vector3(-2.0f, 1.0f, 4.0f)};
         currWaypoint = 0;
     }
@@ -32,7 +34,7 @@ public class Enemy : MonoBehaviour
 			timer += 1;
 			if (timer >= 300) {
 				var pos = this.GetComponent<Transform>(); 
-        		pos.position = new Vector3(0.0f, 1.0f, 4.0f);
+        		pos.position = waypoints[patrolRoute][0];
 				resetting = false;
 				timer = 0;
                 currWaypoint = 0;
@@ -45,14 +47,14 @@ public class Enemy : MonoBehaviour
 		var rotation = transform.rotation;
 
         //Check to see if we're at a waypoint
-        if(this.transform.position == waypoints[currWaypoint]){
-            if(currWaypoint == waypoints.Length -1)
+        if(this.transform.position == waypoints[patrolRoute][currWaypoint]){
+            if(currWaypoint == waypoints[patrolRoute].Length -1)
                 currWaypoint = 0;
             else
                 currWaypoint++;
         }
         //Then go to the next waypoint
-        Vector3 toDest = waypoints[currWaypoint] - this.transform.position;
+        Vector3 toDest = waypoints[patrolRoute][currWaypoint] - this.transform.position;
         //Figure out if we're facing it
         float angleTo = Vector3.SignedAngle(toDest.normalized, this.transform.forward, Vector3.up);
         if(System.Math.Abs(angleTo) >=  0.1){
@@ -71,7 +73,7 @@ public class Enemy : MonoBehaviour
         else{
             //If we can get there immediately, do it
             if(toDest.magnitude <= 10.0f * Time.deltaTime){
-                this.transform.position = waypoints[currWaypoint];
+                this.transform.position = waypoints[patrolRoute][currWaypoint];
             }
             //Otherwise, move the best we can
 
