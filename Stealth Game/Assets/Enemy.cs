@@ -22,9 +22,10 @@ public class Enemy : MonoBehaviour
 		this.enemyObject = GameObject.Find("Enemy");
         //Going to use a series of waypoints
         //Need to figure out how to not hardcode this for multiple enemies
-        waypoints = new Vector3[1][];
-        waypoints[0] = new Vector3[5]{new Vector3(0.0f, 1.0f, 4.0f), new Vector3(-8.0f, 1.0f, 4.0f), new Vector3(-6.0f, 1.0f, 4.0f),
-             new Vector3(-4.0f, 1.0f, 8.0f), new Vector3(-2.0f, 1.0f, 4.0f)};
+        waypoints = new Vector3[3][];
+        waypoints[0] = new Vector3[2]{new Vector3(-14.8f, 1.0f, -1.2f), new Vector3(14.38f, 1.0f, -1.2f)};
+		waypoints[1] = new Vector3[2]{new Vector3(-14.8f, 1.0f, 6.28f), new Vector3(14.38f, 1.0f, 6.28f)};
+		waypoints[2] = new Vector3[2]{new Vector3(-14.8f, 1.0f, 15.85f), new Vector3(3.2f, 1.0f, 15.85f)};
         currWaypoint = 0;
     }
 
