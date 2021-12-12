@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
             timer += 1;
             if (timer >= 300) {
                 var pos = this.GetComponent<Transform>(); 
-                pos.position = new Vector3(0.0f, 0.0f, 0.0f);
+                pos.position = new Vector3(12.72f, 1.0f, -14.9f);
                 canMove = true;
                 timer = 0;
             }
@@ -36,7 +36,9 @@ public class PlayerMovement : MonoBehaviour
         );
 
         this.GetComponent<CharacterController>().SimpleMove(delta);
-
+        if(this.transform.position.z >= 18)
+        	reset();
+        	timer = 250;
     }
 
     void reset() {

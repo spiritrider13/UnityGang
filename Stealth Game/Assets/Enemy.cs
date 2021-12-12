@@ -80,8 +80,6 @@ public class Enemy : MonoBehaviour
 
             else
                 this.transform.Translate(toDest.normalized * 10.0f * Time.deltaTime, Space.World);
-            Debug.Log(toDest.normalized * 10.0f * Time.deltaTime);
-            Debug.Log(this.transform.position);
         }
 		//if (moveDirection == "right") {
 		//	if (position.x > -8) {
